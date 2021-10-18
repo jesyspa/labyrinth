@@ -1,4 +1,6 @@
-use std::iter::FromIterator;
+use crate::view_geometry::{Offset, Point};
+use std::fmt::{Display, Formatter};
+use std::result::Result;
 
 pub struct TextSurface {
     width: usize,
@@ -7,73 +9,67 @@ pub struct TextSurface {
 
 impl TextSurface {
     pub fn new(width: usize, height: usize) -> Self {
-        use std::iter::repeat;
         TextSurface {
             width,
-            data: repeat(repeat(' ' as u8).take(width).collect())
-                .take(height)
-                .collect(),
+            data: vec![vec![b' '; width]; height],
         }
     }
 
-    fn set(&mut self, x: usize, y: usize, c: char) {
-        self.data[x][y] = c as u8;
+    fn set(&mut self, Point(x, y): Point, c: char) {
+        self.data[y][x] = c as u8;
     }
 
-    pub fn get_focus<'a>(&'a mut self) -> TextSurfaceFocus<'a> {
+    pub fn get_focus(&mut self) -> TextSurfaceFocus<'_> {
         let x_max = self.width;
         let y_max = self.data.len();
         TextSurfaceFocus {
             surface: self,
-            x_offset: 0,
-            y_offset: 0,
-            x_max,
-            y_max,
+            offset: Offset::default(),
+            bound: Point(x_max, y_max),
         }
     }
 
-    pub fn print(&self) {
-        for line in self.data.iter() {
-            println!("{}", String::from_iter(line.iter().map(|i| *i as char)))
+    pub fn create_and_draw<T: TextDisplayable>(obj: &T) -> Self {
+        let Point(w, h) = obj.size();
+        let mut surface = Self::new(w, h);
+        obj.display(&mut surface.get_focus());
+        surface
+    }
+}
+
+impl Display for TextSurface {
+    fn fmt(&self, fmt: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
+        for line in self.data.iter().rev() {
+            writeln!(fmt, "{}", String::from_utf8_lossy(line))?;
         }
+        Ok(())
     }
 }
 
 pub struct TextSurfaceFocus<'surface> {
     surface: &'surface mut TextSurface,
-    x_offset: usize,
-    y_offset: usize,
-    x_max: usize,
-    y_max: usize,
+    offset: Offset,
+    bound: Point,
 }
 
 impl<'surface> TextSurfaceFocus<'surface> {
-    pub fn set(&mut self, x: usize, y: usize, c: char) {
-        assert!(x < self.x_max);
-        assert!(y < self.y_max);
-        self.surface.set(self.x_offset + x, self.y_offset + y, c);
+    pub fn set(&mut self, p: Point, c: char) {
+        assert!(p.within(self.bound));
+        self.surface.set(p + self.offset, c);
     }
 
-    pub fn focus<'new_focus>(
-        &'new_focus mut self,
-        x: usize,
-        y: usize,
-        width: usize,
-        height: usize,
-    ) -> TextSurfaceFocus<'new_focus> {
-        assert!(width <= self.x_max);
-        assert!(height <= self.y_max);
+    pub fn focus(&mut self, start: Offset, bound: Point) -> TextSurfaceFocus<'_> {
+        let offset = self.offset + start;
+        assert!((bound + offset).bounded_by(self.bound));
         TextSurfaceFocus {
             surface: self.surface,
-            x_offset: self.x_offset + x,
-            y_offset: self.y_offset + y,
-            x_max: width,
-            y_max: height,
+            offset,
+            bound,
         }
     }
 }
 
 pub trait TextDisplayable {
-    fn size(&self) -> (usize, usize);
-    fn display(&self, surface: &mut TextSurfaceFocus);
+    fn size(&self) -> Point;
+    fn display(&self, surface: &mut TextSurfaceFocus<'_>);
 }

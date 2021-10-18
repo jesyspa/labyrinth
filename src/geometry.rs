@@ -17,4 +17,10 @@ impl Direction {
             Self::West => Self::East,
         }
     }
+
+    pub fn iter() -> impl Iterator<Item = Self> {
+        [Self::North, Self::East, Self::South, Self::West]
+            .iter()
+            .copied()
+    }
 }
