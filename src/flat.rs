@@ -35,12 +35,12 @@ pub struct FlatLabyrinth<R, W> {
     rooms: Vec<Room<R, W>>,
 }
 
-impl<R, W> FlatLabyrinth<R, W>
-where
-    R: Default,
-    W: Default,
-{
-    pub fn new(width: usize, height: usize, all_walls: bool) -> Self {
+impl<R, W> FlatLabyrinth<R, W> {
+    pub fn new(width: usize, height: usize, all_walls: bool) -> Self
+    where
+        R: Default,
+        W: Default,
+    {
         let size = width * height;
         Self {
             width,
@@ -54,12 +54,12 @@ where
     }
 }
 
-impl<R, W> Labyrinth<R, W> for FlatLabyrinth<R, W>
-where
-    R: Default,
-    W: Default,
-{
+impl<R, W> Labyrinth<R, W> for FlatLabyrinth<R, W> {
     type RoomId = RoomCoords;
+
+    fn random_room(&self) -> RoomCoords {
+        (0, 0)
+    }
 
     fn get_neighbour(&self, (x, y): RoomCoords, dir: Direction) -> Option<RoomCoords> {
         match dir {
@@ -108,7 +108,10 @@ where
         self.rooms[ix].walls[dir].is_some()
     }
 
-    fn add_wall(&mut self, room_from: RoomCoords, dir: Direction) {
+    fn add_wall(&mut self, room_from: RoomCoords, dir: Direction)
+    where
+        W: Default,
+    {
         if let Some(room_to) = self.get_neighbour(room_from, dir) {
             let ix_from = self.coord_to_index(room_from);
             let ix_to = self.coord_to_index(room_to);
