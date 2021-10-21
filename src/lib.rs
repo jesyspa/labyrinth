@@ -10,6 +10,9 @@
 //! 
 //! Stretch goal: run bots that try to solve the labyrinth.
 
+// TODO: deny(missing_docs)
+
+// TODO: Reexport things that should be available.
 pub mod generator;
 mod geometry;
 pub mod labyrinth;

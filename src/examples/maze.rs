@@ -2,11 +2,7 @@
 
 #![deny(missing_docs)]
 
-extern crate enum_map_derive;
-extern crate rand;
-
-use labyrinth::labyrinth::FlatLabyrinth;
-use labyrinth::labyrinth::Labyrinth;
+use labyrinth::labyrinth::{FlatLabyrinth, Labyrinth};
 use labyrinth::text_display::TextSurface;
 use labyrinth::generator::random_walk;
 
