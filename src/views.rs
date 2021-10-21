@@ -51,10 +51,13 @@ pub struct RoomView {
 }
 
 impl RoomView {
-    pub fn new(wall_list: &[Direction]) -> Self {
+    pub fn new<T>(wall_list: T) -> Self
+    where
+        T: Iterator<Item = Direction>,
+    {
         let mut walls = EnumMap::default();
         for direction in wall_list {
-            walls[*direction] = true;
+            walls[direction] = true;
         }
         RoomView { walls }
     }

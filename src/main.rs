@@ -1,7 +1,9 @@
 #![allow(dead_code)]
 extern crate enum_map_derive;
 
+mod flat;
 mod geometry;
+mod labyrinth;
 mod text_display;
 mod view_geometry;
 mod views;
@@ -16,12 +18,12 @@ const LABYRINTH_HEIGHT: usize = 4;
 fn main() {
     let mut v: Vec<RoomView> = Vec::new();
     for _ in 0..(LABYRINTH_WIDTH * LABYRINTH_HEIGHT) {
-        v.push(RoomView::new(&[
+        v.push(RoomView::new([
             Direction::North,
             Direction::East,
             Direction::South,
             Direction::West,
-        ]));
+        ].iter().cloned()));
     }
     let lab = LabyrinthView::new(LABYRINTH_WIDTH, LABYRINTH_HEIGHT, v);
     let surface = TextSurface::create_and_draw(&lab);
