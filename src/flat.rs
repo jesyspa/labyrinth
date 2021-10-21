@@ -8,15 +8,47 @@ struct Room<R, W> {
     walls: EnumMap<Direction, Option<W>>,
 }
 
+impl<R, W> Room<R, W>
+where
+    R: Default,
+    W: Default,
+{
+    pub fn new(all_walls: bool) -> Self {
+        let mut walls = EnumMap::default();
+        if all_walls {
+            for v in walls.values_mut() {
+                *v = Some(W::default());
+            }
+        }
+        Self {
+            room_info: R::default(),
+            walls,
+        }
+    }
+}
+
 type RoomCoords = (usize, usize);
 
 pub struct FlatLabyrinth<R, W> {
-    height: usize,
     width: usize,
+    height: usize,
     rooms: Vec<Room<R, W>>,
 }
 
-impl<R, W> FlatLabyrinth<R, W> {
+impl<R, W> FlatLabyrinth<R, W>
+where
+    R: Default,
+    W: Default,
+{
+    pub fn new(width: usize, height: usize, all_walls: bool) -> Self {
+        let size = width * height;
+        Self {
+            width,
+            height,
+            rooms: (0..size).map(|_| Room::new(all_walls)).collect(),
+        }
+    }
+
     fn coord_to_index(&self, (x, y): RoomCoords) -> usize {
         y * self.width + x
     }
@@ -145,9 +177,9 @@ where
     fn view(&self) -> LabyrinthView {
         let mut rooms = Vec::with_capacity(self.width * self.height);
         for r in self.rooms.iter() {
-            rooms.push(RoomView::new(r.walls.iter().filter_map(|(d, w)| {
-                w.as_ref().map(|_| d)
-            })));
+            rooms.push(RoomView::new(
+                r.walls.iter().filter_map(|(d, w)| w.as_ref().map(|_| d)),
+            ));
         }
         LabyrinthView::new(self.width, self.height, rooms)
     }
