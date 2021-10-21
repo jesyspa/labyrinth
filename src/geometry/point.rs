@@ -1,7 +1,7 @@
 use super::Direction;
 use std::ops::{Add, Mul};
 
-#[derive(Default, PartialEq, Eq, Debug, Clone, Copy)]
+#[derive(Default, PartialEq, Eq, Debug, Clone, Copy, Hash)]
 pub struct Point(pub usize, pub usize);
 
 impl Point {
@@ -30,7 +30,7 @@ impl Mul<Point> for usize {
     }
 }
 
-#[derive(Default, PartialEq, Eq, Debug, Clone, Copy)]
+#[derive(Default, PartialEq, Eq, Debug, Clone, Copy, Hash)]
 pub struct Offset(pub usize, pub usize);
 
 impl Add for Offset {
@@ -47,7 +47,7 @@ impl Add<Offset> for Point {
     }
 }
 
-#[derive(PartialEq, Eq, Debug, Clone, Copy)]
+#[derive(PartialEq, Eq, Debug, Clone, Copy, Hash)]
 pub struct Transform {
     width: usize,
     direction: Direction,

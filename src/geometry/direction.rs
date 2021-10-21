@@ -1,6 +1,6 @@
 use enum_map::Enum;
 
-#[derive(PartialEq, Eq, Clone, Copy, Debug, Enum)]
+#[derive(PartialEq, Eq, Clone, Copy, Debug, Enum, Hash)]
 pub enum Direction {
     North,
     East,

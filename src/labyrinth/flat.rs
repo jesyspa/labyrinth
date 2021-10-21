@@ -1,5 +1,5 @@
 use super::Labyrinth;
-use crate::geometry::Direction;
+use crate::geometry::{Direction, Point};
 use crate::views::{LabyrinthView, RoomView};
 use enum_map::EnumMap;
 
@@ -27,8 +27,6 @@ where
     }
 }
 
-type RoomCoords = (usize, usize);
-
 pub struct FlatLabyrinth<R, W> {
     width: usize,
     height: usize,
@@ -49,66 +47,66 @@ impl<R, W> FlatLabyrinth<R, W> {
         }
     }
 
-    fn coord_to_index(&self, (x, y): RoomCoords) -> usize {
+    fn coord_to_index(&self, Point(x, y): Point) -> usize {
         y * self.width + x
     }
 }
 
 impl<R, W> Labyrinth<R, W> for FlatLabyrinth<R, W> {
-    type RoomId = RoomCoords;
+    type RoomId = Point;
 
-    fn random_room(&self) -> RoomCoords {
-        (0, 0)
+    fn random_room(&self) -> Point {
+        Point(0, 0)
     }
 
-    fn get_neighbour(&self, (x, y): RoomCoords, dir: Direction) -> Option<RoomCoords> {
+    fn get_neighbour(&self, Point(x, y): Point, dir: Direction) -> Option<Point> {
         match dir {
             Direction::North => {
                 if y + 1 == self.height {
                     None
                 } else {
-                    Some((x, y + 1))
+                    Some(Point(x, y + 1))
                 }
             }
             Direction::East => {
                 if x + 1 == self.width {
                     None
                 } else {
-                    Some((x + 1, y))
+                    Some(Point(x + 1, y))
                 }
             }
             Direction::South => {
                 if y == 0 {
                     None
                 } else {
-                    Some((x, y - 1))
+                    Some(Point(x, y - 1))
                 }
             }
             Direction::West => {
                 if x == 0 {
                     None
                 } else {
-                    Some((x - 1, y))
+                    Some(Point(x - 1, y))
                 }
             }
         }
     }
 
-    fn room(&self, room: RoomCoords) -> &R {
+    fn room(&self, room: Point) -> &R {
         &self.rooms[self.coord_to_index(room)].room_info
     }
 
-    fn mut_room(&mut self, room: RoomCoords) -> &mut R {
+    fn mut_room(&mut self, room: Point) -> &mut R {
         let ix = self.coord_to_index(room);
         &mut self.rooms[ix].room_info
     }
 
-    fn has_wall(&self, room: RoomCoords, dir: Direction) -> bool {
+    fn has_wall(&self, room: Point, dir: Direction) -> bool {
         let ix = self.coord_to_index(room);
         self.rooms[ix].walls[dir].is_some()
     }
 
-    fn add_wall(&mut self, room_from: RoomCoords, dir: Direction)
+    fn add_wall(&mut self, room_from: Point, dir: Direction)
     where
         W: Default,
     {
@@ -139,7 +137,7 @@ impl<R, W> Labyrinth<R, W> for FlatLabyrinth<R, W> {
         }
     }
 
-    fn remove_wall(&mut self, room_from: RoomCoords, dir: Direction) {
+    fn remove_wall(&mut self, room_from: Point, dir: Direction) {
         if let Some(room_to) = self.get_neighbour(room_from, dir) {
             let ix_from = self.coord_to_index(room_from);
             let ix_to = self.coord_to_index(room_to);
@@ -167,12 +165,12 @@ impl<R, W> Labyrinth<R, W> for FlatLabyrinth<R, W> {
         }
     }
 
-    fn wall(&self, room: RoomCoords, dir: Direction) -> Option<&W> {
+    fn wall(&self, room: Point, dir: Direction) -> Option<&W> {
         let ix = self.coord_to_index(room);
         self.rooms[ix].walls[dir].as_ref()
     }
 
-    fn mut_wall(&mut self, room: RoomCoords, dir: Direction) -> Option<&mut W> {
+    fn mut_wall(&mut self, room: Point, dir: Direction) -> Option<&mut W> {
         let ix = self.coord_to_index(room);
         self.rooms[ix].walls[dir].as_mut()
     }
