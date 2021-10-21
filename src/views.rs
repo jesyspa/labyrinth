@@ -1,6 +1,5 @@
-use crate::geometry::Direction;
+use crate::geometry::{Direction, Offset, Point, Transform};
 use crate::text_display::{TextDisplayable, TextSurfaceFocus};
-use crate::view_geometry::{Offset, Point, Transform};
 use enum_map::EnumMap;
 
 const ROOM_EDGE_LENGTH: usize = 4;

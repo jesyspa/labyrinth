@@ -1,4 +1,4 @@
-use crate::view_geometry::{Offset, Point};
+use crate::geometry::{Offset, Point};
 use std::fmt::{Display, Formatter};
 use std::result::Result;
 

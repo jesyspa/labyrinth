@@ -1,4 +1,4 @@
-use crate::geometry::Direction;
+use super::Direction;
 use std::ops::{Add, Mul};
 
 #[derive(Default, PartialEq, Eq, Debug, Clone, Copy)]

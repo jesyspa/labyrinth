@@ -1,6 +1,10 @@
 use crate::geometry::Direction;
 use crate::views::LabyrinthView;
 
+mod flat;
+
+pub use flat::FlatLabyrinth;
+
 pub trait Labyrinth<R, W> {
     type RoomId;
 

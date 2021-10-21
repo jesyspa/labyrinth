@@ -1,14 +1,12 @@
 #![allow(dead_code)]
 extern crate enum_map_derive;
 
-mod flat;
 mod geometry;
 mod labyrinth;
 mod text_display;
-mod view_geometry;
 mod views;
 
-use crate::flat::FlatLabyrinth;
+use crate::labyrinth::FlatLabyrinth;
 use crate::labyrinth::Labyrinth;
 use crate::text_display::TextSurface;
 

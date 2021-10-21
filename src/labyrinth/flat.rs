@@ -1,5 +1,5 @@
 use crate::geometry::Direction;
-use crate::labyrinth::Labyrinth;
+use super::Labyrinth;
 use crate::views::{LabyrinthView, RoomView};
 use enum_map::EnumMap;
 
