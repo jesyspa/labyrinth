@@ -14,7 +14,7 @@ version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e893a7ba6116821058dec84a6fb14fb2a97cd8ce5fd0f85d5a4e760ecd7329d9"
 dependencies = [
- "enum-map-derive 0.6.0",
+ "enum-map-derive",
 ]
 
 [[package]]
@@ -22,17 +22,6 @@ name = "enum-map-derive"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "84278eae0af6e34ff6c1db44c11634a694aafac559ff3080e4db4e4ac35907aa"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "enum-map-derive"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8182c0d26a908f001a23adc388fcef7fde884fbaf668874126cd5a3c13ca299e"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -55,7 +44,7 @@ name = "labyrinth"
 version = "0.1.0"
 dependencies = [
  "enum-map",
- "enum-map-derive 0.7.0",
+ "enum-map-derive",
  "rand",
 ]
 
