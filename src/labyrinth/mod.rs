@@ -6,7 +6,7 @@ mod flat;
 pub use flat::FlatLabyrinth;
 
 pub trait Labyrinth<R, W> {
-    type RoomId;
+    type RoomId: Eq + Copy;
 
     fn random_room(&self) -> Self::RoomId;
     fn get_neighbour(&self, room: Self::RoomId, dir: Direction) -> Option<Self::RoomId>;
